@@ -11,11 +11,6 @@ csvpath = userhome + '/Desktop/python-challenge.git/PyPoll/Resources/electiondat
 
 data = []
 vote_count = []
-winner = [] #based on popular vote 
-list_of_candidates = [] #who received votes
-percentages = []
-voting_percentage = []
-number_votes = 0
 voterID = []
 total_vote_count = []
 candidates = []
@@ -29,62 +24,60 @@ with open(csvpath) as csvfile:
     data = list(csvreader)
 
 
-    for row in data:
+for row in data:
+    voterID.append(row[0]) 
+    # county.append(row[1])
+    candidates.append(row[2])
 
-            voterID.append(row[0]) 
-            # county.append(row[1])
-            candidates.append(row[2])
-
-    total_vote_count = len(voterID)
+total_vote_count = len(voterID)
     # print(total_vote_count)    
 
+# print(voterID[0:5])
+# print(candidates[0:5])
 
-    number_votes = number_votes + 1
-    candidate = row[2]
+vote_count={}
+for each_candidate in candidates: 
+    # each_candidate='khan'
+    # if 'khan' in vote_count
+    # then add 1 to vote_count['khan'] -> vote_count['khan'] is the value and the current vote count for 'khan'
+    # else -> meaning 'khan' is not in vote_count
+    # then add 'khan' as key and set 1 as value -> meaning first time he's getting a vote
 
+    if each_candidate in vote_count: 
+        # assign vote_count for that candidate to be itself plus 1
+        vote_count[each_candidate]=vote_count[each_candidate]+1
+    else: 
+        vote_count[each_candidate]=1
+    # print(vote_count)
 
-    if candidate in list_of_candidates:
-        candidate_index = list_of_candidates.index(candidate)
-        vote_count[candidate_index] = vote_count[candidate_index] + 1
-    else:
-    # #If name is not in list, append to end of list and adding 1
-        list_of_candidates.append(candidate)
-        vote_count.append(1)
-
-
-#  print(total_vote_count) #Total Votes: 3521001
-
-# #Goes through candidate list by increments of 1, accounting for repeat names
-
-max_votes = vote_count[0]
-max_index = 0
-
-votes = []
-county = []
-candidates = []
-
-for count in range(len(list_of_candidates)):
-
- 
-    voting_percentage = vote_count[count] / number_votes * 100
-    percentages.append(voting_percentage)
-# print(percentages)
-    if vote_count[count] > max_votes:
-        max_votes = vote_count[count]
-        # print(max_votes)
-        max_index = count
-
-winner = [max_index]
-# print(winner)
+# print(f'FINAL VOTE COUNT: {vote_count}')
+# initiate a variable to store highest vote
+max_vote=0
+# initiate a variablle to store name
+max_name=''
+# iterate through the keys of vote_count
+for each_candidate in vote_count: 
+    # each_candidate = 'khan'
+    # pct_vote=vote_count['khan'] -> 220K
+    #   / total_vote_Count
+    # print pct_vote each time
+    total_votes = vote_count[each_candidate]
+    pct_vote=total_votes/total_vote_count*100
+    # print(f'{each_candidate} received {round(pct_vote, 2)}% of vote')
+    # check if the vote count for current candidate in the loop is greater than the current max vote
+    # if yes, then time to have a new winner -> set max vote and max name to new values
+    # else
+    if vote_count[each_candidate]>max_vote: 
+        max_name=each_candidate
+        max_vote=vote_count[each_candidate]
 
 
 
-print(f'Election Results')
+    print(f' {each_candidate} received {round(pct_vote, 2)}% of vote with {total_votes} total votes')
+
 print(f'-----------------------------')
-print("Total Votes: " + str(total_vote_count))
+
+print(f'Total vote count is {total_vote_count}. ')
+
 print(f'-----------------------------')
-print(f'Khan: ')
-print(f'Correy: ')
-print(f"O'Tooley: ")
-print(f'-----------------------------')
-print("Winner: " + str(winner))
+print(f'The winner is {max_name} with {vote_count[max_name]} votes')
